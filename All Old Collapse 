@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>giphy redo</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+  <div id="animal-buttons">
+
+  </div>
+
+  <form id="animal-form">
+    <label for="animal-input">Add an animal</label>
+    <input type="text" id="animal-input"><br>
+    <input id="add-animal" type="submit" value="Submit">
+  </form>
+
+  <div id="animals">
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="index.js"></script>
+  
+</body>
+</html>
+
+
+
+//////////////////// JS
+
+
+
+
+$(document).ready(function() {
+
+    var animals = [
+      "dog", "cat", "rabbit", "hamster", "skunk", "goldfish",
+      "bird", "ferret", "turtle", "sugar glider", "chinchilla",
+      "hedgehog", "hermit crab", "gerbil", "pygmy goat", "chicken",
+      "capybara", "teacup pig", "serval", "salamander", "frog"
+    ];
+  
+    // function to make buttons and add to page
+    function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
+      $(areaToAddTo).empty();
+  
+      for (var i = 0; i < arrayToUse.length; i++) {
+        var a = $("<button>");
+        a.addClass(classToAdd);
+        a.attr("data-type", arrayToUse[i]);
+        a.text(arrayToUse[i]);
+        $(areaToAddTo).append(a);
+      }
+  
+    }
+  
+    $(document).on("click", ".animal-button", function() {
+      $("#animals").empty();
+      $(".animal-button").removeClass("active");
+      $(this).addClass("active");
+  
+      var type = $(this).attr("data-type");
+
+      //// my API key doesn't work and was denied. ///////
+      
+      // var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=Jx2oP7M3A3l66xoZ2441yHiwTny7AX6flimit=10";
+  
+
+      // var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+    //   api_key=Jx2oP7M3A3l66xoZ2441yHiwTny7AX6f
+    //   api_key=dc6zaTOxFJmzC&limit=10"
+    
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function(response) {
+          var results = response.data;
+  
+          for (var i = 0; i < results.length; i++) {
+            var animalDiv = $("<div class=\"animal-item\">");
+  
+            var rating = results[i].rating;
+  
+            var p = $("<p>").text("Rating: " + rating);
+  
+            var animated = results[i].images.fixed_height.url;
+            var still = results[i].images.fixed_height_still.url;
+  
+            var animalImage = $("<img>");
+            animalImage.attr("src", still);
+            animalImage.attr("data-still", still);
+            animalImage.attr("data-animate", animated);
+            animalImage.attr("data-state", "still");
+            animalImage.addClass("animal-image");
+  
+            animalDiv.append(p);
+            animalDiv.append(animalImage);
+  
+            $("#animals").append(animalDiv);
+          }
+        });
+    });
+  
+    $(document).on("click", ".animal-image", function() {
+  
+      var state = $(this).attr("data-state");
+  
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      }
+      else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
+  
+    $("#add-animal").on("click", function(event) {
+      event.preventDefault();
+      var newAnimal = $("input").eq(0).val();
+  
+      if (newAnimal.length > 2) {
+        animals.push(newAnimal);
+      }
+  
+      populateButtons(animals, "animal-button", "#animal-buttons");
+  
+    });
+  
+    populateButtons(animals, "animal-button", "#animal-buttons");
+  });
+  
+
+
+
+//////////////////// CSS 
+
+
+body {
+    font: 18px arial, sans-serif;
+    background: #eee;
+  }
+  
+  #animals {
+    width: 70%;
+  }
+  
+  .animal-item {
+    float: left;
+    padding: 10px;
+  }
+  
+  form {
+    float: right;
+    width: 30%;
+    padding: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  button,
+  input[type="submit"] {
+    padding: 5px 20px;
+    margin: 0 10px 10px 0;
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+    background: #659a98;
+    border: 0;
+    border-radius: 5px;
+    box-shadow: 2px 2px 3px #bbb;
+  }
+  
+  button:hover,
+  input[type="submit"]:hover {
+    background: #334e4d;
+  }
+  
+  button.active {
+    background: #334e4d;
+  }
+  
