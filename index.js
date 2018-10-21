@@ -1,10 +1,9 @@
 $(document).ready(function() {
 
   var food = [
-    "burgers", "hotdogs", "fries", "burritos", "avocado", "chips",
-    "meatloaf", "tacos", "chicken", "beef", "spagetti",
-    "mac and cheese", "steak", "porkchops", "eggs", "pho",
-    "ramen", "sushi", "salmon", "halibut", "cod"
+    "burgers", "hotdogs", "tacos", "chicken", "beef", "spagetti",
+    "mac and cheese", "steak", "eggs", "pho",
+    "ramen", "salmon", "halibut", 
   ];
 
   // function to make buttons and add to page
@@ -28,15 +27,21 @@ $(document).ready(function() {
 
     var type = $(this).attr("data-type");
 
-    //// my API key doesn't work and was denied. ///////
+    //// my API key was denied. And the class repo key is not working either ///////
+
+    
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+    type + "&api_key=dc6zaTOxFJmzC&limit=10";
+  
+    // var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+    //                topic + "&api_key=dc6zaTOxFJmzC&limit=10";
     
     // var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=Jx2oP7M3A3l66xoZ2441yHiwTny7AX6flimit=10";
 
 
     // var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-  //   api_key=Jx2oP7M3A3l66xoZ2441yHiwTny7AX6f
-  //   api_key=dc6zaTOxFJmzC&limit=10"
+
   
     $.ajax({
       url: queryURL,
@@ -55,15 +60,15 @@ $(document).ready(function() {
           var animated = results[i].images.fixed_height.url;
           var still = results[i].images.fixed_height_still.url;
 
-          var foodImage = $("<img>");
-          foodImage.attr("src", still);
-          foodImage.attr("data-still", still);
+          var foodImages = $("<img>");
+          foodImages.attr("src", still);
+          foodImages.attr("data-still", still);
           foodImages.attr("data-animate", animated);
           foodImages.attr("data-state", "still");
-          foodImage.addClass("food-image");
+          foodImages.addClass("food-image");
 
           foodDiv.append(p);
-          foodDiv.append(foodImage);
+          foodDiv.append(foodImages);
 
           $("#food").append(foodDiv);
         }
