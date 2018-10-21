@@ -27,8 +27,6 @@ $(document).ready(function() {
 
     var type = $(this).attr("data-type");
 
-    //// my API key was denied. And the class repo key is not working either ///////
-
     
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
     type + "&api_key=dc6zaTOxFJmzC&limit=10";
